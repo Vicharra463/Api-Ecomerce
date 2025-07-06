@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\Clientes;
 
 use App\Models\Cliente;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-
+use App\Http\Requests\StoreClienteRequest;
+use App\Http\Requests\UpdateClienteRequest;
 
 class ClienteController
 {
+    //ver todos los clientes
     public function index()
     {
         $clientes = Cliente::all();
@@ -27,27 +27,11 @@ class ClienteController
         ], 200);
     }
 
-    public function insert(Request $request)
+    //insertar los clientes con la validacion del store del request
+
+    public function insert(StoreClienteRequest $request)
     {
-
-        $validador = Validator::make($request->all(), [
-            'Nombre' => 'required|string|max:255',
-            'Direccion' => 'required|string|max:255',
-            'Email' => 'required|string|email|max:255',
-            'Razon_Social' => 'required|string|max:255',
-            'RUC' => 'required|string|max:255',
-            'Telefono' => 'required|string|max:255',
-        ]);
-
-        if ($validador->fails()) {
-            return response()->json([
-                'Response' => 'Error de validación',
-                'Status' => 422,
-                'Errors' => $validador->errors()
-            ], 422);
-        }
-
-        $cliente = Cliente::create($request->all());
+        $cliente = Cliente::create($request->validated());
 
         $data = [
             'Response' => 'Cliente creado correctamente',
@@ -58,7 +42,8 @@ class ClienteController
         return response()->json($data, 201);
     }
 
-    public function update(Request $request, $CODI_CLI)
+    //validar los el codigo para poder actualizar el cliente
+    public function update(UpdateClienteRequest $request, $CODI_CLI)
     {
         $cliente = Cliente::find($CODI_CLI);
 
@@ -69,32 +54,18 @@ class ClienteController
             ], 404);
         }
 
-        $validador = Validator::make($request->all(), [
-            'Nombre' => 'string|max:255',
-            'Direccion' => 'string|max:255',
-            'Email' => 'string|email|max:255',
-            'Razon_Social' => 'string|max:255',
-            'RUC' => 'string|max:255',
-            'Telefono' => 'string|max:255',
-        ]);
+        $cliente->update($request->validated());
 
-        if ($validador->fails()) {
-            return response()->json([
-                'Response' => 'Error de validación',
-                'Status' => 422,
-                'Errors' => $validador->errors()
-            ], 422);
-        }
-
-        $cliente->update($request->all());
-
-        return response()->json([
+        $data = [
             'Response' => 'Cliente actualizado correctamente',
             'Status' => 200,
             'Data' => $cliente
-        ], 200);
+        ];
+
+        return response()->json($data, 200);
     }
 
+    //eliminar el cliente por codigo
     public function delete($CODI_CLI)
     {
         $cliente = Cliente::find($CODI_CLI);
@@ -114,6 +85,7 @@ class ClienteController
         ], 200);
     }
 
+    //mostar cliente por codigo
     public function show($CODI_CLI)
     {
         $cliente = Cliente::find($CODI_CLI);
@@ -125,10 +97,12 @@ class ClienteController
             ], 404);
         }
 
-        return response()->json([
+        $data = [
             'Response' => 'Cliente encontrado',
             'Status' => 200,
             'Data' => $cliente
-        ], 200);
+        ];
+
+        return response()->json($data, 200);
     }
 }

@@ -12,9 +12,14 @@ class Cliente extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'CODI_CLI', 'Nombre', 'Direccion', 'Email',
-        'Razon_Social', 'RUC', 'Telefono',
-        'Fecha_Registro', 'Fecha_Actualizacion'
+        'Nombre',
+        'Direccion',
+        'Email',
+        'Razon_Social',
+        'RUC',
+        'Telefono',
+        'Fecha_Registro',
+        'Fecha_Actualizacion'
     ];
 
     public function usuarios()

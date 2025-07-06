@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categoria extends Model
 {
-    protected $table = 'categoria';
+   protected $table = 'categoria';
     public $timestamps = false;
 
-    protected $fillable = ['nombre', 'descripcion', 'fecha_registro', 'fecha_actualizacion'];
+    protected $fillable = ['nombre', 'descripcion'];
 
     public function productos()
     {
